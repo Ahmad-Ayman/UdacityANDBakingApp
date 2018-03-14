@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.freelance.ahmed.bakingapp.Activities.StepsActivity;
 import com.freelance.ahmed.bakingapp.Interfaces.ItemClickListener;
-import com.freelance.ahmed.bakingapp.POJO.RecipesList;
+import com.freelance.ahmed.bakingapp.POJO.Recipes;
 import com.freelance.ahmed.bakingapp.R;
 
 import java.io.Serializable;
@@ -24,13 +24,12 @@ import java.util.List;
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesAdapterViewHolder> {
 
     private Context mContext;
-    private List<RecipesList.Recipes> allRecipesData;
-    private List<RecipesList.Recipes.Steps> recipesSteps;
-    private List<RecipesList.Recipes.Ingredients> recipesIngredients;
+    private List<Recipes> allRecipesData;
+    private List<Recipes.Steps> recipesSteps;
+    private List<Recipes.Ingredients> recipesIngredients;
     private String recipeName;
-    private int stepsCount;
 
-    public RecipesAdapter (Context context, List<RecipesList.Recipes> rList){
+    public RecipesAdapter (Context context, List<Recipes> rList){
         mContext=context;
         allRecipesData=rList;
     }
@@ -46,7 +45,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
     @Override
     public void onBindViewHolder(RecipesAdapterViewHolder holder, int position) {
         recipeName = allRecipesData.get(position).getName();
-        stepsCount = allRecipesData.get(position).getSteps().size();
+        int stepsCount = allRecipesData.get(position).getSteps().size();
         recipesSteps= allRecipesData.get(position).getSteps();
         recipesIngredients = allRecipesData.get(position).getIngredients();
         String stepsCountString = String.valueOf(stepsCount);
@@ -77,7 +76,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
             return 0;
         return allRecipesData.size();
     }
-    public void setAllRecipesData(List<RecipesList.Recipes> recipesData) {
+    public void setAllRecipesData(List<Recipes> recipesData) {
         allRecipesData = recipesData;
         notifyDataSetChanged();
     }

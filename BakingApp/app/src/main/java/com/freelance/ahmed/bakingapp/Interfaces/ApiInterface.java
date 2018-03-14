@@ -1,6 +1,8 @@
 package com.freelance.ahmed.bakingapp.Interfaces;
 
-import com.freelance.ahmed.bakingapp.POJO.RecipesList;
+import com.freelance.ahmed.bakingapp.POJO.Recipes;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -11,5 +13,5 @@ import retrofit2.http.GET;
 
 public interface ApiInterface {
     @GET("59121517_baking/baking.json")
-    Call<RecipesList> getAllRecipes ();
+    Call<List<Recipes>> getAllRecipes ();
 }

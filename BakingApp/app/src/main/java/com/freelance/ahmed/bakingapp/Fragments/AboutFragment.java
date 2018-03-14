@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import com.freelance.ahmed.bakingapp.R;
 
-import mehdi.sakout.aboutpage.AboutPage;
-import mehdi.sakout.aboutpage.Element;
+//import mehdi.sakout.aboutpage.AboutPage;
+//import mehdi.sakout.aboutpage.Element;
 
 
 /**
@@ -36,19 +36,19 @@ public class AboutFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Element versionElement = new Element();
-        versionElement.setTitle("Version 1.0");
-        View aboutPage = new AboutPage(getContext())
-                .isRTL(false)
-                .setImage(R.drawable.udacity)
-                .setDescription(getResources().getString(R.string.about_app))
-                .addItem(versionElement)
-                .addGroup("Connect with us")
-                .addEmail("ahmed.ayman1708@gmail.com")
-                .addWebsite("http://ahmed-ayman1708.me/")
-                .addFacebook("a.ayman1996")
-                .addTwitter("Ahmeda1708")
-                .addGitHub("Ahmeda1708")
-                .create();
+//        Element versionElement = new Element();
+//        versionElement.setTitle("Version 1.0");
+//        View aboutPage = new AboutPage(getContext())
+//                .isRTL(false)
+//                .setImage(R.drawable.udacity)
+//                .setDescription(getResources().getString(R.string.about_app))
+//                .addItem(versionElement)
+//                .addGroup("Connect with us")
+//                .addEmail("ahmed.ayman1708@gmail.com")
+//                .addWebsite("http://ahmed-ayman1708.me/")
+//                .addFacebook("a.ayman1996")
+//                .addTwitter("Ahmeda1708")
+//                .addGitHub("Ahmeda1708")
+//                .create();
     }
 }
