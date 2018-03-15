@@ -58,6 +58,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsAdapter
                 i.putExtra("LONG_DESC_KEY", longDesc);
                 i.putExtra("VIDEO_URL_KEY", videoUrl);
                 i.putExtra("THUMB_KEY",thumb);
+                i.putExtra("position",pos);
                 mContext.startActivity(i);
             }
         });

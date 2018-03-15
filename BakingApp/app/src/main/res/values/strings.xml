@@ -16,7 +16,9 @@
     <string name="allData">Walima Recipes</string>
     <string name="ingred">Ingredients</string>
     <string name="stepsofrecipe">Steps</string>
-
+    <string name="desc">Description</string>
+    <string name="next">Next Step</string>
+    <string name="prev">Previous Step</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
