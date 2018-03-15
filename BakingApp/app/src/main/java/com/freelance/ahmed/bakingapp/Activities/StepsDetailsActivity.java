@@ -28,6 +28,7 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
@@ -175,6 +176,7 @@ public class StepsDetailsActivity extends AppCompatActivity {
             MediaSource mediaSource = new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
 
             exoPlayerView.setPlayer(exoPlayer);
+            exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
             exoPlayer.prepare(mediaSource);
             exoPlayer.setPlayWhenReady(true);
         } catch (Exception e) {
