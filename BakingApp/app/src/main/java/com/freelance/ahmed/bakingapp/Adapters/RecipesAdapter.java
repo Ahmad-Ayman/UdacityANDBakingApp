@@ -2,7 +2,10 @@ package com.freelance.ahmed.bakingapp.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +16,10 @@ import com.freelance.ahmed.bakingapp.Activities.StepsActivity;
 import com.freelance.ahmed.bakingapp.Interfaces.ItemClickListener;
 import com.freelance.ahmed.bakingapp.POJO.Recipes;
 import com.freelance.ahmed.bakingapp.R;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,8 +30,8 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
 
     private Context mContext;
     private List<Recipes> allRecipesData;
-    private List<Recipes.Steps> recipesSteps;
-    private List<Recipes.Ingredients> recipesIngredients;
+    private ArrayList<Recipes.Steps> recipesSteps;
+    private ArrayList<Recipes.Ingredients> recipesIngredients;
     private String recipeName;
 
     public RecipesAdapter (Context context, List<Recipes> rList){
@@ -46,8 +51,8 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
     public void onBindViewHolder(RecipesAdapterViewHolder holder, int position) {
         recipeName = allRecipesData.get(position).getName();
         int stepsCount = allRecipesData.get(position).getSteps().size();
-        recipesSteps= allRecipesData.get(position).getSteps();
-        recipesIngredients = allRecipesData.get(position).getIngredients();
+        recipesSteps= (ArrayList<Recipes.Steps>) allRecipesData.get(position).getSteps();
+        recipesIngredients = (ArrayList<Recipes.Ingredients>) allRecipesData.get(position).getIngredients();
         String stepsCountString = String.valueOf(stepsCount);
         holder.mRecipeName.setText(recipeName);
         holder.mStepsCount.setText(stepsCountString);
@@ -56,16 +61,24 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
             public void onItemClick(View v, int pos) {
                 Intent i = new Intent(mContext, StepsActivity.class);
                 recipeName = allRecipesData.get(pos).getName();
-                recipesSteps= allRecipesData.get(pos).getSteps();
-                recipesIngredients = allRecipesData.get(pos).getIngredients();
-                i.putExtra("NAME",recipeName);
-                Bundle stepsArgs = new Bundle();
-                stepsArgs.putSerializable("STEPS_ARRAYLIST",(Serializable)recipesSteps);
-                Bundle ingArgs = new Bundle();
-                ingArgs.putSerializable("INGR_ARRAYLIST",(Serializable) recipesIngredients);
-                i.putExtra("STEPS",stepsArgs);
-                i.putExtra("INGREDIENTS",ingArgs);
+                recipesSteps= (ArrayList<Recipes.Steps>) allRecipesData.get(pos).getSteps();
+                recipesIngredients = (ArrayList<Recipes.Ingredients>) allRecipesData.get(pos).getIngredients();
+                Intent intent = i.putExtra("NAME", recipeName);
+                i.putExtra("STEPS",recipesSteps);
+                i.putExtra("INGREDIENTS",recipesIngredients);
                 mContext.startActivity(i);
+
+                SharedPreferences appSharedPrefs = PreferenceManager
+                        .getDefaultSharedPreferences(mContext);
+                SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(recipesSteps);
+                String json2= gson.toJson(recipesIngredients);
+                prefsEditor.putString("steps", json);
+                prefsEditor.putString("ingred",json2);
+                prefsEditor.putString("name",recipeName);
+                prefsEditor.apply();
+
             }
         });
     }

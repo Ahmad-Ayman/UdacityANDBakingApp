@@ -14,4 +14,9 @@
     <string name="about_app">You will productionize an app, taking it from a functional state to a production-ready state. This will involve finding and handling error cases, adding accessibility features, allowing for localization, adding a widget, and adding a library. As a working Android developer, you often have to create and implement apps where you are responsible for designing and planning the steps you need to take to create a production-ready app. Unlike Popular Movies where we gave you an implementation guide, it will be up to you to figure things out for the Baking App.</string>
     <string name="steps">No. of Steps:&#32;</string>
     <string name="allData">Walima Recipes</string>
+    <string name="ingred">Ingredients</string>
+    <string name="stepsofrecipe">Steps</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

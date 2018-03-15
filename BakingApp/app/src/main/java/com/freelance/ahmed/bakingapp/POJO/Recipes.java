@@ -1,5 +1,8 @@
 package com.freelance.ahmed.bakingapp.POJO;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -38,7 +41,7 @@ public class Recipes {
         return steps;
     }
 
-    public class Ingredients {
+    public static class Ingredients  implements Parcelable {
         @SerializedName("quantity")
         private double quantity;
         @SerializedName("measure")
@@ -52,6 +55,24 @@ public class Recipes {
             this.ingred = ingred;
         }
 
+        protected Ingredients(Parcel in) {
+            quantity = in.readDouble();
+            measure = in.readString();
+            ingred = in.readString();
+        }
+
+        public static final Creator<Ingredients> CREATOR = new Creator<Ingredients>() {
+            @Override
+            public Ingredients createFromParcel(Parcel in) {
+                return new Ingredients(in);
+            }
+
+            @Override
+            public Ingredients[] newArray(int size) {
+                return new Ingredients[size];
+            }
+        };
+
         public double getQuantity() {
             return quantity;
         }
@@ -63,21 +84,55 @@ public class Recipes {
         public String getMeasure() {
             return measure;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeDouble(quantity);
+            parcel.writeString(measure);
+            parcel.writeString(ingred);
+        }
     }
 
-    public class Steps {
+    public static class Steps implements Parcelable{
         @SerializedName("shortDescription")
         private String shortDesc;
         @SerializedName("description")
         private String desc;
         @SerializedName("videoURL")
         private String videourl;
+        @SerializedName("thumbnailURL")
+        private String thumb;
 
-        public Steps(String shortDesc, String desc, String videourl) {
+        public Steps(String shortDesc, String desc, String videourl,String thumb) {
             this.shortDesc = shortDesc;
             this.desc = desc;
             this.videourl = videourl;
+            this.thumb=thumb;
         }
+
+        protected Steps(Parcel in) {
+            shortDesc = in.readString();
+            desc = in.readString();
+            videourl = in.readString();
+            thumb = in.readString();
+        }
+
+        public static final Creator<Steps> CREATOR = new Creator<Steps>() {
+            @Override
+            public Steps createFromParcel(Parcel in) {
+                return new Steps(in);
+            }
+
+            @Override
+            public Steps[] newArray(int size) {
+                return new Steps[size];
+            }
+        };
 
         public String getDesc() {
             return desc;
@@ -89,6 +144,23 @@ public class Recipes {
 
         public String getVideourl() {
             return videourl;
+        }
+
+        public String getThumb() {
+            return thumb;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(shortDesc);
+            parcel.writeString(desc);
+            parcel.writeString(videourl);
+            parcel.writeString(thumb);
         }
     }
 }
