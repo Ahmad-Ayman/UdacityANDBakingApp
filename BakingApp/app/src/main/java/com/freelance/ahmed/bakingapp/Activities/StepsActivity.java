@@ -8,6 +8,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.freelance.ahmed.bakingapp.Fragments.IngredientsListFragment;
 import com.freelance.ahmed.bakingapp.Fragments.StepsListFragment;
@@ -17,7 +20,8 @@ import com.freelance.ahmed.bakingapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StepsActivity extends AppCompatActivity {
+public class StepsActivity extends AppCompatActivity  implements StepsListFragment.OnStepClickListener{
+    private boolean mTwoPane;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -27,11 +31,19 @@ public class StepsActivity extends AppCompatActivity {
             case R.id.navigation_ingred:
                 IngredientsListFragment ingredientsListFragment = new IngredientsListFragment();
                 FragmentManager manager = getSupportFragmentManager();
+                ScrollView stepsdetail = findViewById(R.id.stepsDetails);
+                if(findViewById(R.id.activitySteptwoPane)!= null) {
+                    stepsdetail.setVisibility(View.INVISIBLE);
+                }
                 manager.beginTransaction().replace(R.id.recyclerViewDataLayoutForRecipe, ingredientsListFragment).commit();
                 return true;
             case R.id.navigation_steps:
                 StepsListFragment stepsListFragment = new StepsListFragment();
                 FragmentManager managerSearch = getSupportFragmentManager();
+                ScrollView stepsdetails = findViewById(R.id.stepsDetails);
+                if(findViewById(R.id.activitySteptwoPane)!= null) {
+                    stepsdetails.setVisibility(View.VISIBLE);
+                }
                 managerSearch.beginTransaction().replace(R.id.recyclerViewDataLayoutForRecipe, stepsListFragment).commit();
                 return true;
         }
@@ -52,10 +64,17 @@ public class StepsActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         IngredientsListFragment ingredientsListFragment = new IngredientsListFragment();
         FragmentManager manager = getSupportFragmentManager();
+        ScrollView stepsdetail = findViewById(R.id.stepsDetails);
+        if(findViewById(R.id.activitySteptwoPane)!= null) {
+            stepsdetail.setVisibility(View.INVISIBLE);
+        }
         manager.beginTransaction().replace(R.id.recyclerViewDataLayoutForRecipe, ingredientsListFragment).commit();
+
     }
 
 
-
-
+    @Override
+    public void onStepClick(int position) {
+        Toast.makeText(this, "Position Clicked "+position, Toast.LENGTH_SHORT).show();
+    }
 }

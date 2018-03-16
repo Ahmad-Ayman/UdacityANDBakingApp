@@ -1,24 +1,23 @@
-package com.freelance.ahmed.bakingapp.Activities;
+package com.freelance.ahmed.walima;
 
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.freelance.ahmed.bakingapp.POJO.Recipes;
-import com.freelance.ahmed.bakingapp.R;
-import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
@@ -26,25 +25,23 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StepsDetailsActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity {
+    private RecyclerView rView;
+    private LinearLayoutManager lLayout;
+    private IngredientsAdapter rcAdapter;
     SimpleExoPlayerView exoPlayerView;
     SimpleExoPlayer exoPlayer;
     String videoURL = null;
@@ -58,62 +55,98 @@ public class StepsDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_steps_details);
-        ActionBar ab = getSupportActionBar();
-        // Enable the Up button
-        ab.setDisplayHomeAsUpEnabled(true);
-        // first time after being here from adapter
-        videoURL = getIntent().getStringExtra("VIDEO_URL_KEY");
-        thumbURL = getIntent().getStringExtra("THUMB_KEY");
-        longdes = getIntent().getStringExtra("LONG_DESC_KEY");
-        shortdes = getIntent().getStringExtra("SHORT_DESC_KEY");
-        pos = getIntent().getIntExtra("position", -1);
-        prev = findViewById(R.id.prev_linear);
-        nex = findViewById(R.id.LinearNext);
+        setContentView(R.layout.activity_detail);
+        FrameLayout stepdetails = findViewById(R.id.steps_frame_layout);
+        FrameLayout listofIngredients = findViewById(R.id.ing_frame_layout);
+        String from = getIntent().getStringExtra("from");
+        if(from.equals("ingredients")){
+            stepdetails.setVisibility(View.INVISIBLE);
+            listofIngredients.setVisibility(View.VISIBLE);
+            setTitle(getResources().getString(R.string.ingred));
+            rView = findViewById(R.id.rv_ing);
+            lLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            rView.setLayoutManager(lLayout);
+            SharedPreferences appSharedPrefs = PreferenceManager
+                    .getDefaultSharedPreferences(this);
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<Recipes.Ingredients>>() {
+            }.getType();
+            String response = appSharedPrefs.getString("ingred", "");
+            ArrayList<Recipes.Ingredients> ingredients = gson.fromJson(response, type);
 
-        updateUI(pos);
-        // End of first time
-        SharedPreferences appSharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Recipes.Steps>>() {
-        }.getType();
-        String response = appSharedPrefs.getString("steps", "");
-        final ArrayList<Recipes.Steps> steps = gson.fromJson(response, type);
 
-        prev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pos = pos - 1;
-                if (pos == 0) {
-                    Toast.makeText(StepsDetailsActivity.this, "First step", Toast.LENGTH_SHORT).show();
-                    prev.setVisibility(View.INVISIBLE);
-                }
-                if (exoPlayer != null)
-                    releaseExoPlayer();
-                updateUI(pos);
+            if (ingredients != null && !ingredients.isEmpty()) {
+                rcAdapter = new IngredientsAdapter(this, ingredients);
+                rView.setAdapter(rcAdapter);
+                RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+                itemAnimator.setAddDuration(1000);
+                itemAnimator.setRemoveDuration(1000);
+                rView.setItemAnimator(itemAnimator);
+
+            } else {
+                Log.e("ingr", "Ingredientsis null");
             }
-        });
-        nex.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pos = pos + 1;
-                if (pos == steps.size() - 1) {
-                    Toast.makeText(StepsDetailsActivity.this, "Last step", Toast.LENGTH_SHORT).show();
-                    nex.setVisibility(View.INVISIBLE);
+        }else if ( from.equals("StepsAdapter")){
+            listofIngredients.setVisibility(View.INVISIBLE);
+            stepdetails.setVisibility(View.VISIBLE);
+            ActionBar ab = getSupportActionBar();
+            // Enable the Up button
+            ab.setDisplayHomeAsUpEnabled(true);
+            // first time after being here from adapter
+            videoURL = getIntent().getStringExtra("VIDEO_URL_KEY");
+            thumbURL = getIntent().getStringExtra("THUMB_KEY");
+            longdes = getIntent().getStringExtra("LONG_DESC_KEY");
+            shortdes = getIntent().getStringExtra("SHORT_DESC_KEY");
+            pos = getIntent().getIntExtra("position", -1);
+            prev = findViewById(R.id.prev_linear);
+            nex = findViewById(R.id.LinearNext);
+
+            updateUI(pos);
+            // End of first time
+            SharedPreferences appSharedPrefs = PreferenceManager
+                    .getDefaultSharedPreferences(this);
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<Recipes.Steps>>() {
+            }.getType();
+            String response = appSharedPrefs.getString("steps", "");
+            final ArrayList<Recipes.Steps> steps = gson.fromJson(response, type);
+
+            prev.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pos = pos - 1;
+                    if (pos == 0) {
+                        Toast.makeText(DetailActivity.this, "First step", Toast.LENGTH_SHORT).show();
+                        prev.setVisibility(View.INVISIBLE);
+                    }
+                    if (exoPlayer != null)
+                        releaseExoPlayer();
+                    updateUI(pos);
                 }
-                if (exoPlayer != null)
-                    releaseExoPlayer();
-                updateUI(pos);
-            }
-        });
+            });
+            nex.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pos = pos + 1;
+                    if (pos == steps.size() - 1) {
+                        Toast.makeText(DetailActivity.this, "Last step", Toast.LENGTH_SHORT).show();
+                        nex.setVisibility(View.INVISIBLE);
+                    }
+                    if (exoPlayer != null)
+                        releaseExoPlayer();
+                    updateUI(pos);
+                }
+            });
 
 
-        Log.i("Link of Video", videoURL);
+            Log.i("Link of Video", videoURL);
 
+
+
+
+        }
 
     }
-
     private void updateUI(int position) {
         String shortDes;
         String longDes;

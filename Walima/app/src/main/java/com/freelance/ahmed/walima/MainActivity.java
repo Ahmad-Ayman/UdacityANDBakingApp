@@ -1,28 +1,16 @@
-package com.freelance.ahmed.bakingapp.Fragments;
+package com.freelance.ahmed.walima;
 
-
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.freelance.ahmed.bakingapp.Adapters.RecipesAdapter;
-import com.freelance.ahmed.bakingapp.Clients.RetrofitClient;
-import com.freelance.ahmed.bakingapp.Interfaces.ApiInterface;
-import com.freelance.ahmed.bakingapp.POJO.Recipes;
-import com.freelance.ahmed.bakingapp.R;
 
 import java.util.List;
 
@@ -30,11 +18,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class RecipesFragment extends Fragment {
+public class MainActivity extends AppCompatActivity {
     private RecyclerView rView;
     private LinearLayoutManager lLayout;
     private RecipesAdapter rcAdapter;
@@ -44,32 +28,21 @@ public class RecipesFragment extends Fragment {
     private ApiInterface apiInterface;
     private boolean mTwoPane;
 
-    public RecipesFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipes, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle(getResources().getString(R.string.allData));
-        mLoadingIndicator =  view.findViewById(R.id.pb_loading_indicator);
-        emptyView = view.findViewById(R.id.empty_view);
-        rView = view.findViewById(R.id.rv_recipes);
-        swiping =  view.findViewById(R.id.swiperefresh);
-        if (view.findViewById(R.id.framelayout_large) != null) {
-            lLayout = new GridLayoutManager(this.getContext(), 3);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        setTitle(getResources().getString(R.string.allData));
+        mLoadingIndicator =  findViewById(R.id.pb_loading_indicator);
+        emptyView = findViewById(R.id.empty_view);
+        rView = findViewById(R.id.rv_recipes);
+        swiping =  findViewById(R.id.swiperefresh);
+        if (findViewById(R.id.activitymain_large) != null) {
+            lLayout = new GridLayoutManager(this, 3);
             mTwoPane=true;
         }
         else {
-            lLayout = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
+            lLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             mTwoPane=false;
         }
         rView.setLayoutManager(lLayout);
@@ -84,7 +57,6 @@ public class RecipesFragment extends Fragment {
                     }
                 }
         );
-
     }
 
     private void getAllRecipesData() {
@@ -97,7 +69,7 @@ public class RecipesFragment extends Fragment {
             public void onResponse(Call<List<Recipes>> call, Response<List<Recipes>> response) {
                 List<Recipes> rlist = response.body();
                 if(rlist !=null && !rlist.isEmpty()){
-                    rcAdapter = new RecipesAdapter(getContext(), rlist);
+                    rcAdapter = new RecipesAdapter(MainActivity.this, rlist);
                     rView.setAdapter(rcAdapter);
                     RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
                     itemAnimator.setAddDuration(1000);
@@ -106,7 +78,7 @@ public class RecipesFragment extends Fragment {
                     showRecipesDataView();
                 }
                 else{
-                   showErrorEmptyView();
+                    showErrorEmptyView();
                 }
             }
 

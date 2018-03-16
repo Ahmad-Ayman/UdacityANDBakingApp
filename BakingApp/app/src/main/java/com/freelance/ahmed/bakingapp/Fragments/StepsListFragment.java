@@ -1,6 +1,7 @@
 package com.freelance.ahmed.bakingapp.Fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -55,6 +56,7 @@ public class StepsListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(getResources().getString(R.string.stepsofrecipe));
         rView = view.findViewById(R.id.rv_stp);
+
         lLayout = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
         rView.setLayoutManager(lLayout);
         SharedPreferences appSharedPrefs = PreferenceManager
@@ -74,9 +76,34 @@ public class StepsListFragment extends Fragment {
             itemAnimator.setRemoveDuration(1000);
             rView.setItemAnimator(itemAnimator);
 
+
         }
         else {
             Log.e("stp", "Steps null");
+        }
+        if(view.findViewById(R.id.activitySteptwoPane) != null){
+            rView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+    }
+
+
+    public interface OnStepClickListener{
+        void onStepClick(int position);
+    }
+    OnStepClickListener mCallBack;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            mCallBack = (OnStepClickListener) context;
+        } catch (ClassCastException e){
+            throw new ClassCastException(context.toString() + " must implement on Step Click");
         }
     }
 }
