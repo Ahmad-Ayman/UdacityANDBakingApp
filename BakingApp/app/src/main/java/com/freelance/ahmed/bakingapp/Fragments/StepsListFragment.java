@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -38,6 +39,10 @@ public class StepsListFragment extends Fragment {
     private RecyclerView rView;
     private LinearLayoutManager lLayout;
     private StepsAdapter rcAdapter;
+    public interface OnStepClickListener{
+        void onStepClick(int position);
+    }
+    OnStepClickListener mCallBack;
 
     public StepsListFragment() {
         // Required empty public constructor
@@ -48,13 +53,18 @@ public class StepsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_steps_list, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        final View view=  inflater.inflate(R.layout.fragment_steps_list, container, false);
         getActivity().setTitle(getResources().getString(R.string.stepsofrecipe));
+        if(view.findViewById(R.id.activitySteptwoPane) != null){
+            rView.setOnClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    mCallBack.onStepClick(position);
+                }
+            });
+        } else{
+
+        }
         rView = view.findViewById(R.id.rv_stp);
 
         lLayout = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
@@ -81,21 +91,11 @@ public class StepsListFragment extends Fragment {
         else {
             Log.e("stp", "Steps null");
         }
-        if(view.findViewById(R.id.activitySteptwoPane) != null){
-            rView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-                }
-            });
-        }
+        return view;
     }
 
 
-    public interface OnStepClickListener{
-        void onStepClick(int position);
-    }
-    OnStepClickListener mCallBack;
 
     @Override
     public void onAttach(Context context) {

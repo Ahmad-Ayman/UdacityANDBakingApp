@@ -71,15 +71,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsAdapter
             @Override
             public void onItemClick(View v, int pos) {
                 if(holder.stepsTwopane != null){
-//                    SharedPreferences appSharedPrefs = PreferenceManager
-//                            .getDefaultSharedPreferences(mContext);
-//                    SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
-//                    prefsEditor.putString("SHORT_DESC_KEY", shortDesc);
-//                    prefsEditor.putString("LONG_DESC_KEY", longDesc);
-//                    prefsEditor.putString("VIDEO_URL_KEY", videoUrl);
-//                    prefsEditor.putString("THUMB_KEY",thumb);
-//                    prefsEditor.putInt("position",pos);
-//                    prefsEditor.apply();
+//
 
                     SimpleExoPlayer exoPlayer;
                     String videoLink = allStepsData.get(pos).getVideourl();
@@ -177,7 +169,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsAdapter
         private TextView title;
         private LinearLayout stepsTwopane;
         SimpleExoPlayerView exoPlayerView;
-       
+
 
         private ImageView holderImage;
         private TextView longDesc;
