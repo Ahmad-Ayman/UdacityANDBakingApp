@@ -1,4 +1,4 @@
-package com.freelance.ahmed.bakingapp;
+package com.freelance.ahmed.bakingapp.Fragments;
 
 
 import android.content.SharedPreferences;
@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.freelance.ahmed.bakingapp.Activities.StepsDetailsActivity;
 import com.freelance.ahmed.bakingapp.POJO.Recipes;
+import com.freelance.ahmed.bakingapp.R;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -67,8 +68,6 @@ public class StepsDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_steps_details, container, false);
-
-
         return v;
     }
 

@@ -49,10 +49,11 @@ public class StepsAdapter extends BaseAdapter {
     private Context mContext;
     private List<Recipes.Steps> allStepsData;
     int layoutResourceId;
-    public StepsAdapter(Context context,int layoutResourceId, List<Recipes.Steps> sList) {
+
+    public StepsAdapter(Context context, int layoutResourceId, List<Recipes.Steps> sList) {
         mContext = context;
         allStepsData = sList;
-        this.layoutResourceId=layoutResourceId;
+        this.layoutResourceId = layoutResourceId;
     }
 
     @Override
@@ -74,25 +75,25 @@ public class StepsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-        View row= convertView;
+        View row = convertView;
         StepsHolder holder = null;
         if (row == null) {
-            LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
+            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, viewGroup, false);
             holder = new StepsHolder();
-            holder.txtTitle=row.findViewById(R.id.title_step);
+            holder.txtTitle = row.findViewById(R.id.title_step);
             row.setTag(holder);
 
-        } else{
-                holder = (StepsHolder) row.getTag();
+        } else {
+            holder = (StepsHolder) row.getTag();
         }
 
         holder.txtTitle.setText(allStepsData.get(position).getShortDesc());
         return row;
 
     }
-    static class StepsHolder
-    {
+
+    static class StepsHolder {
         TextView txtTitle;
     }
 }

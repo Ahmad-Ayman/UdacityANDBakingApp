@@ -9,13 +9,13 @@
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/video_player"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="@dimen/largeHeight"
         app:layout_constraintTop_toBottomOf="@id/constlayout" />
 
     <ImageView
         android:id="@+id/holderimage"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="@dimen/largeHeight"
         android:layout_marginLeft="@dimen/smalldp"
         android:layout_marginRight="@dimen/smalldp"
         android:src="@drawable/bbq"
@@ -77,7 +77,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/smalldp"
             android:text="@string/prev"
-            android:textSize="16sp" />
+            android:textSize="@dimen/sixteensp" />
     </LinearLayout>
 
     <LinearLayout
@@ -106,7 +106,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/smalldp"
             android:text="@string/next"
-            android:textSize="16sp" />
+            android:textSize="@dimen/sixteensp" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
 

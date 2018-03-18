@@ -69,11 +69,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
         private TextView meas;
         private TextView quan;
 
-
-
         public IngredientsViewHolder(View view) {
             super(view);
-            // view.setOnClickListener(this);
+
             ing = (TextView) view.findViewById(R.id.ingred);
             meas = (TextView) view.findViewById(R.id.tv_measure);
             quan = (TextView) view.findViewById(R.id.quantity);

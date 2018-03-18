@@ -42,7 +42,7 @@ public class RecipesFragment extends Fragment {
     private RelativeLayout emptyView;
     private SwipeRefreshLayout swiping;
     private ApiInterface apiInterface;
-    private boolean mTwoPane;
+
 
     public RecipesFragment() {
         // Required empty public constructor
@@ -60,17 +60,16 @@ public class RecipesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(getResources().getString(R.string.allData));
-        mLoadingIndicator =  view.findViewById(R.id.pb_loading_indicator);
+        mLoadingIndicator = view.findViewById(R.id.pb_loading_indicator);
         emptyView = view.findViewById(R.id.empty_view);
         rView = view.findViewById(R.id.rv_recipes);
-        swiping =  view.findViewById(R.id.swiperefresh);
+        swiping = view.findViewById(R.id.swiperefresh);
         if (view.findViewById(R.id.framelayout_large) != null) {
             lLayout = new GridLayoutManager(this.getContext(), 3);
-            mTwoPane=true;
-        }
-        else {
+
+        } else {
             lLayout = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
-            mTwoPane=false;
+
         }
         rView.setLayoutManager(lLayout);
         getAllRecipesData();
@@ -96,7 +95,7 @@ public class RecipesFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Recipes>> call, Response<List<Recipes>> response) {
                 List<Recipes> rlist = response.body();
-                if(rlist !=null && !rlist.isEmpty()){
+                if (rlist != null && !rlist.isEmpty()) {
                     rcAdapter = new RecipesAdapter(getContext(), rlist);
                     rView.setAdapter(rcAdapter);
                     RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -104,9 +103,8 @@ public class RecipesFragment extends Fragment {
                     itemAnimator.setRemoveDuration(1000);
                     rView.setItemAnimator(itemAnimator);
                     showRecipesDataView();
-                }
-                else{
-                   showErrorEmptyView();
+                } else {
+                    showErrorEmptyView();
                 }
             }
 
@@ -117,12 +115,14 @@ public class RecipesFragment extends Fragment {
             }
         });
     }
+
     private void showRecipesDataView() {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         emptyView.setVisibility(View.INVISIBLE);
         rView.setVisibility(View.VISIBLE);
     }
-    private void showErrorEmptyView(){
+
+    private void showErrorEmptyView() {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         rView.setVisibility(View.INVISIBLE);
         emptyView.setVisibility(View.VISIBLE);

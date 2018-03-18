@@ -26,9 +26,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class IngredientsListFragment extends Fragment {
     private RecyclerView rView;
     private LinearLayoutManager lLayout;
@@ -60,7 +58,6 @@ public class IngredientsListFragment extends Fragment {
         }.getType();
         String response = appSharedPrefs.getString("ingred", "");
         ArrayList<Recipes.Ingredients> ingredients = gson.fromJson(response, type);
-
 
         if (ingredients != null && !ingredients.isEmpty()) {
             rcAdapter = new IngredientsAdapter(getContext(), ingredients);

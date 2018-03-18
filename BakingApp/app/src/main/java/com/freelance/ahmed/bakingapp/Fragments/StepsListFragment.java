@@ -74,7 +74,7 @@ public class StepsListFragment extends Fragment {
         String response = appSharedPrefs.getString("steps", "");
         ArrayList<Recipes.Steps> steps = gson.fromJson(response, type);
 
-        StepsAdapter sAdapter = new StepsAdapter(getContext(),R.layout.detail_recipe_list_item, steps);
+        StepsAdapter sAdapter = new StepsAdapter(getContext(), R.layout.detail_recipe_list_item, steps);
         gridView.setAdapter(sAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

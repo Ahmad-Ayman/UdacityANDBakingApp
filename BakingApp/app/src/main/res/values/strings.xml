@@ -23,4 +23,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="nav_title">Walima App</string>
+    <string name="nav_desc">Your Tasty Baking App</string>
 </resources>

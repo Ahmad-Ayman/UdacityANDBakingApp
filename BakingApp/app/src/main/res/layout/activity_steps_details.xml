@@ -7,7 +7,6 @@
     <FrameLayout
         android:id="@+id/steps_details_frame_for_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 
 </ScrollView>

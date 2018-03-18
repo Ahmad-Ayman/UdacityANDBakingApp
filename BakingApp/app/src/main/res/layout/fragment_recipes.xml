@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.freelance.ahmed.bakingapp.Fragments.RecipesFragment">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,7 +13,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_recipes"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -62,8 +61,8 @@
 
     <ProgressBar
         android:id="@+id/pb_loading_indicator"
-        android:layout_height="@dimen/indicatordp"
         android:layout_width="@dimen/indicatordp"
+        android:layout_height="@dimen/indicatordp"
         android:layout_gravity="center"
         android:visibility="invisible" />
 

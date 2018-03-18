@@ -41,7 +41,7 @@ public class Recipes {
         return steps;
     }
 
-    public static class Ingredients  implements Parcelable {
+    public static class Ingredients implements Parcelable {
         @SerializedName("quantity")
         private double quantity;
         @SerializedName("measure")
@@ -98,7 +98,7 @@ public class Recipes {
         }
     }
 
-    public static class Steps implements Parcelable{
+    public static class Steps implements Parcelable {
         @SerializedName("shortDescription")
         private String shortDesc;
         @SerializedName("description")
@@ -108,11 +108,11 @@ public class Recipes {
         @SerializedName("thumbnailURL")
         private String thumb;
 
-        public Steps(String shortDesc, String desc, String videourl,String thumb) {
+        public Steps(String shortDesc, String desc, String videourl, String thumb) {
             this.shortDesc = shortDesc;
             this.desc = desc;
             this.videourl = videourl;
-            this.thumb=thumb;
+            this.thumb = thumb;
         }
 
         protected Steps(Parcel in) {

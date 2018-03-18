@@ -15,7 +15,11 @@
     <dimen name="indicatordp">42dp</dimen>
     <dimen name="twentysp">20sp</dimen>
     <dimen name="fifteensp">15sp</dimen>
-
+    <dimen name="twelvesp">12sp</dimen>
+    <dimen name="largeHeight">280dp</dimen>
+    <dimen name="sixteensp">16sp</dimen>
+    <dimen name="fifDP">50dp</dimen>
+    <dimen name="eighteendp">18dp</dimen>
     <!--
 Refer to App Widget Documentation for margin information
 http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
