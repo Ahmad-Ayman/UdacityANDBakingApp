@@ -1,6 +1,7 @@
 package com.freelance.ahmed.bakingapp.Fragments;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -36,39 +39,33 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class StepsListFragment extends Fragment {
-    private RecyclerView rView;
-    private LinearLayoutManager lLayout;
-    private StepsAdapter rcAdapter;
-    public interface OnStepClickListener{
+    public interface OnStepClickListener {
         void onStepClick(int position);
     }
+
     OnStepClickListener mCallBack;
 
     public StepsListFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallBack = (OnStepClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement on Step Click");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view=  inflater.inflate(R.layout.fragment_steps_list, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_steps_list, container, false);
         getActivity().setTitle(getResources().getString(R.string.stepsofrecipe));
-        if(view.findViewById(R.id.activitySteptwoPane) != null){
-            rView.setOnClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    mCallBack.onStepClick(position);
-                }
-            });
-        } else{
-
-        }
-        rView = view.findViewById(R.id.rv_stp);
-
-        lLayout = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
-        rView.setLayoutManager(lLayout);
+        ListView gridView = (ListView) rootView.findViewById(R.id.stepslist);
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this.getContext());
         Gson gson = new Gson();
@@ -77,35 +74,21 @@ public class StepsListFragment extends Fragment {
         String response = appSharedPrefs.getString("steps", "");
         ArrayList<Recipes.Steps> steps = gson.fromJson(response, type);
 
+        StepsAdapter sAdapter = new StepsAdapter(getContext(),R.layout.detail_recipe_list_item, steps);
+        gridView.setAdapter(sAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                mCallBack.onStepClick(position);
+            }
+        });
+        gridView.setItemsCanFocus(true);
+        return rootView;
 
-        if (steps != null && !steps.isEmpty()) {
-            rcAdapter = new StepsAdapter(getContext(), steps);
-            rView.setAdapter(rcAdapter);
-            RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-            itemAnimator.setAddDuration(1000);
-            itemAnimator.setRemoveDuration(1000);
-            rView.setItemAnimator(itemAnimator);
 
-
-        }
-        else {
-            Log.e("stp", "Steps null");
-        }
-
-        return view;
     }
 
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try{
-            mCallBack = (OnStepClickListener) context;
-        } catch (ClassCastException e){
-            throw new ClassCastException(context.toString() + " must implement on Step Click");
-        }
-    }
 }
 
 

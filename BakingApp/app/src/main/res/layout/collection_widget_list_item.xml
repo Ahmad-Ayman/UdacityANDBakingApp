@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:paddingLeft="@dimen/smalldp"
+    android:paddingRight="@dimen/smalldp"
+    android:paddingStart="@dimen/smalldp"
+    android:paddingEnd="@dimen/smalldp"
+    android:minHeight="@dimen/indicatordp"
+    android:weightSum="2"
+    android:id="@+id/widgetItemContainer"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/widgetItemTaskNameLabel"
+        android:layout_width="wrap_content"
+        tools:text="@string/home"
+        android:textSize="12sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
