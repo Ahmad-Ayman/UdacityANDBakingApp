@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.freelance.ahmed.bakingapp.Activities.StepsDetailsActivity;
 import com.freelance.ahmed.bakingapp.POJO.Recipes;
 import com.freelance.ahmed.bakingapp.R;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -53,7 +54,7 @@ public class StepsDetailsFragment extends Fragment {
     String videoURL = null;
     private int pos;
     String thumbURL = null;
-
+    long videoPosition;
     String longdes, shortdes;
     LinearLayout prev;
     LinearLayout nex;
@@ -75,6 +76,10 @@ public class StepsDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        videoPosition= C.TIME_UNSET;
+        if(savedInstanceState!=null){
+            videoPosition=savedInstanceState.getLong("SELECTED_POSITION",C.TIME_UNSET);
+        }
         final View x = view;
         Log.i("info in fragment", "Steps Details Fragment Created Successfully");
         SharedPreferences appSharedPrefs = PreferenceManager
@@ -201,8 +206,10 @@ public class StepsDetailsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (exoPlayer != null)
+        if (exoPlayer != null) {
+            videoPosition=exoPlayer.getCurrentPosition();
             releaseExoPlayer();
+        }
     }
 
     @Override
@@ -217,5 +224,12 @@ public class StepsDetailsFragment extends Fragment {
         super.onDestroy();
         if (exoPlayer != null)
             releaseExoPlayer();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putLong("SELECTED_POSITION",videoPosition);
+        super.onSaveInstanceState(outState);
+
     }
 }
