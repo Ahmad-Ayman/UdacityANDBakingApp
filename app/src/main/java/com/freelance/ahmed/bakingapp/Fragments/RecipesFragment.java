@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,7 +43,8 @@ public class RecipesFragment extends Fragment {
     private RelativeLayout emptyView;
     private SwipeRefreshLayout swiping;
     private ApiInterface apiInterface;
-
+    int lastFirstVisiblePosition;
+    FrameLayout largeScreenFrame;
 
     public RecipesFragment() {
         // Required empty public constructor
@@ -60,8 +62,10 @@ public class RecipesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(getResources().getString(R.string.allData));
+        largeScreenFrame = view.findViewById(R.id.framelayout_large);
         mLoadingIndicator = view.findViewById(R.id.pb_loading_indicator);
         emptyView = view.findViewById(R.id.empty_view);
+
         rView = view.findViewById(R.id.rv_recipes);
         swiping = view.findViewById(R.id.swiperefresh);
         if (view.findViewById(R.id.framelayout_large) != null) {
@@ -126,5 +130,46 @@ public class RecipesFragment extends Fragment {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         rView.setVisibility(View.INVISIBLE);
         emptyView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (largeScreenFrame != null) {
+            lastFirstVisiblePosition = ((GridLayoutManager) rView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        } else {
+            lastFirstVisiblePosition = ((LinearLayoutManager) rView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (largeScreenFrame != null) {
+            ((GridLayoutManager) rView.getLayoutManager()).scrollToPosition(lastFirstVisiblePosition);
+        } else {
+            ((LinearLayoutManager) rView.getLayoutManager()).scrollToPosition(lastFirstVisiblePosition);
+        }
+        lastFirstVisiblePosition = 0;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (largeScreenFrame != null) {
+            lastFirstVisiblePosition = ((GridLayoutManager) rView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        } else {
+            lastFirstVisiblePosition = ((LinearLayoutManager) rView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (largeScreenFrame != null) {
+            lastFirstVisiblePosition = ((GridLayoutManager) rView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        } else {
+            lastFirstVisiblePosition = ((LinearLayoutManager) rView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        }
     }
 }

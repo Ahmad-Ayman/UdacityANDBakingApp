@@ -23,10 +23,17 @@ public class Recipes {
     @SerializedName("steps")
     private List<Steps> steps;
 
-    public Recipes(String recipename) {
+    @SerializedName("image")
+    private String imageLink;
+    public Recipes(String recipename,String image) {
         this.name = recipename;
         this.ingredients = new ArrayList<>();
         this.steps = new ArrayList<>();
+        this.imageLink=image;
+    }
+
+    public String getImageLink() {
+        return imageLink;
     }
 
     public String getName() {

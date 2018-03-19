@@ -9,11 +9,10 @@
     android:paddingTop="@dimen/smalldp">
 
     <ImageView
-        android:id="@+id/icon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/icon_recipe_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_gravity="center_vertical"
-        android:layout_weight="0.3"
         android:src="@drawable/ic_meal" />
 
     <TextView
@@ -24,7 +23,7 @@
         android:layout_marginRight="@dimen/smalldp"
         android:layout_marginTop="@dimen/smalldp"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        app:layout_constraintLeft_toRightOf="@id/icon"
+        app:layout_constraintLeft_toRightOf="@id/icon_recipe_image"
         tools:text="@string/home" />
 
     <TextView
@@ -37,7 +36,7 @@
         android:text="@string/steps"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/darker_gray"
-        app:layout_constraintLeft_toRightOf="@id/icon"
+        app:layout_constraintLeft_toRightOf="@id/icon_recipe_image"
         app:layout_constraintTop_toBottomOf="@id/recipetitle" />
 
     <TextView

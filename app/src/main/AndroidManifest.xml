@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.MainActivity"
-            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
@@ -25,11 +25,11 @@
         </activity>
         <activity
             android:name=".Activities.StepsActivity"
-            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+
             android:parentActivityName=".Activities.MainActivity" />
         <activity
             android:name=".Activities.StepsDetailsActivity"
-            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+
             android:parentActivityName=".Activities.StepsActivity" />
 
         <receiver android:name=".Widget.IngredientsWidget">

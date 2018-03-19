@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.freelance.ahmed.bakingapp.Activities.StepsActivity;
@@ -17,6 +19,7 @@ import com.freelance.ahmed.bakingapp.Interfaces.ItemClickListener;
 import com.freelance.ahmed.bakingapp.POJO.Recipes;
 import com.freelance.ahmed.bakingapp.R;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
     private ArrayList<Recipes.Steps> recipesSteps;
     private ArrayList<Recipes.Ingredients> recipesIngredients;
     private String recipeName;
-
+    private String recipeImage;
     public RecipesAdapter(Context context, List<Recipes> rList) {
         mContext = context;
         allRecipesData = rList;
@@ -50,11 +53,18 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
     @Override
     public void onBindViewHolder(RecipesAdapterViewHolder holder, int position) {
         recipeName = allRecipesData.get(position).getName();
+        recipeImage = allRecipesData.get(position).getImageLink();
         int stepsCount = allRecipesData.get(position).getSteps().size();
         recipesSteps = (ArrayList<Recipes.Steps>) allRecipesData.get(position).getSteps();
         recipesIngredients = (ArrayList<Recipes.Ingredients>) allRecipesData.get(position).getIngredients();
         String stepsCountString = String.valueOf(stepsCount);
         holder.mRecipeName.setText(recipeName);
+        if(TextUtils.isEmpty(recipeImage)){
+            holder.mRecipeImage.setImageResource(R.drawable.ic_meal);
+        }
+        else{
+            Picasso.get().load(recipeImage).into(holder.mRecipeImage);
+        }
         holder.mStepsCount.setText(stepsCountString);
         holder.setItemClickListener(new ItemClickListener() {
             @Override
@@ -98,6 +108,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
     public class RecipesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mRecipeName;
         private TextView mStepsCount;
+        private ImageView mRecipeImage;
 
         private ItemClickListener itemClickListener;
 
@@ -105,6 +116,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
             super(view);
             mRecipeName = (TextView) view.findViewById(R.id.recipetitle);
             mStepsCount = (TextView) view.findViewById(R.id.stepsnumber);
+            mRecipeImage = view.findViewById(R.id.icon_recipe_image);
             view.setOnClickListener(this);
         }
 

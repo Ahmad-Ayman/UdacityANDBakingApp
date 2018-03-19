@@ -35,6 +35,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -153,9 +154,11 @@ public class StepsDetailsFragment extends Fragment {
                 holderImage.setVisibility(View.VISIBLE);
             } else {
 
-                exoPlayerViewUI.setVisibility(View.VISIBLE);
-                holderImage.setVisibility(View.INVISIBLE);
-                initializeExoPlayer((stepsList.get(position).getThumb()), v);
+                exoPlayerViewUI.setVisibility(View.INVISIBLE);
+                Picasso.get().load(stepsList.get(position).getThumb()).into(holderImage);
+                holderImage.setVisibility(View.VISIBLE);
+                //initializeExoPlayer((stepsList.get(position).getThumb()), v);
+
             }
         } else {
 
@@ -168,11 +171,11 @@ public class StepsDetailsFragment extends Fragment {
 
     private void initializeExoPlayer(String url, View v) {
         SimpleExoPlayerView exoPlayerViewInitialize = v.findViewById(R.id.video_player);
-        SimpleExoPlayer exoPlayerInitialize;
+
         try {
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
             TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
-            exoPlayerInitialize = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
+            exoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
 
             Uri videoURI = Uri.parse(url);
 
@@ -180,10 +183,10 @@ public class StepsDetailsFragment extends Fragment {
             ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
             MediaSource mediaSource = new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
 
-            exoPlayerViewInitialize.setPlayer(exoPlayerInitialize);
+            exoPlayerViewInitialize.setPlayer(exoPlayer);
             exoPlayerViewInitialize.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
-            exoPlayerInitialize.prepare(mediaSource);
-            exoPlayerInitialize.setPlayWhenReady(true);
+            exoPlayer.prepare(mediaSource);
+            exoPlayer.setPlayWhenReady(true);
         } catch (Exception e) {
             Log.e("MainAcvtivity", " exoplayer error " + e.toString());
         }
