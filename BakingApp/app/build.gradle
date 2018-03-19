@@ -36,8 +36,10 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.1'
     implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.7.1'
     compile 'com.github.medyo:android-about-page:1.2.4'
+    compile 'com.android.support:support-annotations:27.1.0'
     // compile 'com.github.medyo:android-about-page:1.2.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestCompile 'com.android.support:support-annotations:27.1.0'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }

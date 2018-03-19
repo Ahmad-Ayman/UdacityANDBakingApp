@@ -47,12 +47,12 @@ import java.util.List;
 public class StepsDetailsFragment extends Fragment {
     SimpleExoPlayerView exoPlayerView;
     SimpleExoPlayer exoPlayer;
-
+    ImageView holderImage;
+    TextView longDescTv;
     String videoURL = null;
     private int pos;
     String thumbURL = null;
-    ImageView holderImage;
-    TextView longDescTv;
+
     String longdes, shortdes;
     LinearLayout prev;
     LinearLayout nex;
@@ -130,42 +130,49 @@ public class StepsDetailsFragment extends Fragment {
     }
 
     private void updateUI(View v, int position, String shortDes, String longDes, String videoLink, String thumbLink) {
+        SimpleExoPlayerView exoPlayerViewUI = v.findViewById(R.id.video_player);
+        ImageView holderImage = v.findViewById(R.id.holderimage);
+        TextView longDescTv = v.findViewById(R.id.longdesc);
+        LinearLayout prevUI=v.findViewById(R.id.prev_linear);
+        LinearLayout nexUI = v.findViewById(R.id.LinearNext);
         if (position == 0) {
-            prev.setVisibility(View.INVISIBLE);
+            prevUI.setVisibility(View.INVISIBLE);
         } else if (position == stepsList.size() - 1) {
-            nex.setVisibility(View.INVISIBLE);
+            nexUI.setVisibility(View.INVISIBLE);
         } else {
-            prev.setVisibility(View.VISIBLE);
-            nex.setVisibility(View.VISIBLE);
+            prevUI.setVisibility(View.VISIBLE);
+            nexUI.setVisibility(View.VISIBLE);
         }
         getActivity().setTitle(shortDes);
 
         longDescTv.setText(longDes);
         if (videoLink == null || videoLink.isEmpty()) {
             if (thumbLink == null || thumbLink.isEmpty()) {
-                exoPlayerView = v.findViewById(R.id.video_player);
-                exoPlayerView.setVisibility(View.INVISIBLE);
+
+                exoPlayerViewUI.setVisibility(View.INVISIBLE);
                 holderImage.setVisibility(View.VISIBLE);
             } else {
-                exoPlayerView = v.findViewById(R.id.video_player);
-                exoPlayerView.setVisibility(View.VISIBLE);
+
+                exoPlayerViewUI.setVisibility(View.VISIBLE);
                 holderImage.setVisibility(View.INVISIBLE);
-                initializeExoPlayer(thumbLink);
+                initializeExoPlayer(thumbLink,v);
             }
         } else {
-            exoPlayerView = v.findViewById(R.id.video_player);
-            exoPlayerView.setVisibility(View.VISIBLE);
+
+            exoPlayerViewUI.setVisibility(View.VISIBLE);
             holderImage.setVisibility(View.INVISIBLE);
-            initializeExoPlayer(videoLink);
+            initializeExoPlayer(videoLink,v);
         }
 
     }
 
-    private void initializeExoPlayer(String url) {
+    private void initializeExoPlayer(String url,View v) {
+        SimpleExoPlayerView exoPlayerViewInitialize = v.findViewById(R.id.video_player);
+        SimpleExoPlayer exoPlayerInitialize;
         try {
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
             TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
-            exoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
+            exoPlayerInitialize = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
 
             Uri videoURI = Uri.parse(url);
 
@@ -173,10 +180,10 @@ public class StepsDetailsFragment extends Fragment {
             ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
             MediaSource mediaSource = new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
 
-            exoPlayerView.setPlayer(exoPlayer);
-            exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
-            exoPlayer.prepare(mediaSource);
-            exoPlayer.setPlayWhenReady(true);
+            exoPlayerViewInitialize.setPlayer(exoPlayerInitialize);
+            exoPlayerViewInitialize.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
+            exoPlayerInitialize.prepare(mediaSource);
+            exoPlayerInitialize.setPlayWhenReady(true);
         } catch (Exception e) {
             Log.e("MainAcvtivity", " exoplayer error " + e.toString());
         }
