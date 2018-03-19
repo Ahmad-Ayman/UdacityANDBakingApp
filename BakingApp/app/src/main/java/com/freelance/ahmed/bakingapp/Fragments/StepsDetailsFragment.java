@@ -89,7 +89,7 @@ public class StepsDetailsFragment extends Fragment {
         String response = appSharedPrefs.getString("steps", "");
         stepsList = gson.fromJson(response, type);
 
-        updateUI(x, pos, shortdes, longdes, videoURL, thumbURL);
+        updateUI(x, pos);
         exoPlayerView = view.findViewById(R.id.video_player);
         longDescTv = view.findViewById(R.id.longdesc);
         holderImage = view.findViewById(R.id.holderimage);
@@ -109,7 +109,7 @@ public class StepsDetailsFragment extends Fragment {
                     }
                     if (exoPlayer != null)
                         releaseExoPlayer();
-                    updateUI(x, pos, shortdes, longdes, videoURL, thumbURL);
+                    updateUI(x, pos);
                 }
             });
             nex.setOnClickListener(new View.OnClickListener() {
@@ -122,18 +122,18 @@ public class StepsDetailsFragment extends Fragment {
                     }
                     if (exoPlayer != null)
                         releaseExoPlayer();
-                    updateUI(x, pos, shortdes, longdes, videoURL, thumbURL);
+                    updateUI(x, pos);
                 }
             });
         }
 
     }
 
-    private void updateUI(View v, int position, String shortDes, String longDes, String videoLink, String thumbLink) {
+    private void updateUI(View v, int position) {
         SimpleExoPlayerView exoPlayerViewUI = v.findViewById(R.id.video_player);
         ImageView holderImage = v.findViewById(R.id.holderimage);
         TextView longDescTv = v.findViewById(R.id.longdesc);
-        LinearLayout prevUI=v.findViewById(R.id.prev_linear);
+        LinearLayout prevUI = v.findViewById(R.id.prev_linear);
         LinearLayout nexUI = v.findViewById(R.id.LinearNext);
         if (position == 0) {
             prevUI.setVisibility(View.INVISIBLE);
@@ -143,11 +143,11 @@ public class StepsDetailsFragment extends Fragment {
             prevUI.setVisibility(View.VISIBLE);
             nexUI.setVisibility(View.VISIBLE);
         }
-        getActivity().setTitle(shortDes);
+        getActivity().setTitle(stepsList.get(position).getShortDesc());
 
-        longDescTv.setText(longDes);
-        if (videoLink == null || videoLink.isEmpty()) {
-            if (thumbLink == null || thumbLink.isEmpty()) {
+        longDescTv.setText(stepsList.get(position).getDesc());
+        if ((stepsList.get(position).getVideourl()) == null || (stepsList.get(position).getVideourl()).isEmpty()) {
+            if ((stepsList.get(position).getThumb()) == null || (stepsList.get(position).getThumb()).isEmpty()) {
 
                 exoPlayerViewUI.setVisibility(View.INVISIBLE);
                 holderImage.setVisibility(View.VISIBLE);
@@ -155,18 +155,18 @@ public class StepsDetailsFragment extends Fragment {
 
                 exoPlayerViewUI.setVisibility(View.VISIBLE);
                 holderImage.setVisibility(View.INVISIBLE);
-                initializeExoPlayer(thumbLink,v);
+                initializeExoPlayer((stepsList.get(position).getThumb()), v);
             }
         } else {
 
             exoPlayerViewUI.setVisibility(View.VISIBLE);
             holderImage.setVisibility(View.INVISIBLE);
-            initializeExoPlayer(videoLink,v);
+            initializeExoPlayer((stepsList.get(position).getVideourl()), v);
         }
 
     }
 
-    private void initializeExoPlayer(String url,View v) {
+    private void initializeExoPlayer(String url, View v) {
         SimpleExoPlayerView exoPlayerViewInitialize = v.findViewById(R.id.video_player);
         SimpleExoPlayer exoPlayerInitialize;
         try {
