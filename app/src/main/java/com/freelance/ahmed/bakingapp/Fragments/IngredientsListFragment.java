@@ -22,6 +22,7 @@ import com.freelance.ahmed.bakingapp.Adapters.IngredientsAdapter;
 import com.freelance.ahmed.bakingapp.Adapters.StepsAdapter;
 import com.freelance.ahmed.bakingapp.POJO.Recipes;
 import com.freelance.ahmed.bakingapp.R;
+import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -77,6 +78,13 @@ public class IngredientsListFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
+        lastFirstVisiblePosition = ((LinearLayoutManager) rView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
         lastFirstVisiblePosition = ((LinearLayoutManager) rView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
     }
 

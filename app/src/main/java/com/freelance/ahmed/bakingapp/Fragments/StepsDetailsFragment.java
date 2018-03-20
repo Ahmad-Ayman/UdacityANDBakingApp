@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
@@ -53,10 +55,11 @@ public class StepsDetailsFragment extends Fragment {
     String videoURL = null;
     private int pos;
     String thumbURL = null;
-
+    long mediaposition;
     String longdes, shortdes;
     LinearLayout prev;
     LinearLayout nex;
+    boolean playWhenReady;
     ArrayList<Recipes.Steps> stepsList;
 
     public StepsDetailsFragment() {
@@ -77,12 +80,14 @@ public class StepsDetailsFragment extends Fragment {
             pos=savedInstanceState.getInt("POSITION");
             longdes=savedInstanceState.getString("LONG_DESC");
             shortdes=savedInstanceState.getString("SHORT_DESC");
+            mediaposition=savedInstanceState.getLong("MEDIA_POSITION");
         }else{
             shortdes = appSharedPrefs.getString("shortDesc", "");
             longdes = appSharedPrefs.getString("longDesc", "");
             videoURL = appSharedPrefs.getString("vid", "");
             thumbURL = appSharedPrefs.getString("thum", "");
             pos = appSharedPrefs.getInt("position", -1);
+            mediaposition=0;
         }
         final View x = view;
         Log.i("info in fragment", "Steps Details Fragment Created Successfully");
@@ -169,27 +174,27 @@ public class StepsDetailsFragment extends Fragment {
 
             exoPlayerViewUI.setVisibility(View.VISIBLE);
             holderImage.setVisibility(View.INVISIBLE);
-            initializeExoPlayer((stepsList.get(position).getVideourl()), v);
+            initializeExoPlayer();
         }
 
     }
 
-    private void initializeExoPlayer(String url, View v) {
-        SimpleExoPlayerView exoPlayerViewInitialize = v.findViewById(R.id.video_player);
+    private void initializeExoPlayer() {
+
 
         try {
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
             TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
             exoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
 
-            Uri videoURI = Uri.parse(url);
+            Uri videoURI = Uri.parse(stepsList.get(pos).getVideourl());
 
             DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("exoplayer_video");
             ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
             MediaSource mediaSource = new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
 
-            exoPlayerViewInitialize.setPlayer(exoPlayer);
-            exoPlayerViewInitialize.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
+            exoPlayerView.setPlayer(exoPlayer);
+            exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
             exoPlayer.prepare(mediaSource);
             exoPlayer.setPlayWhenReady(true);
         } catch (Exception e) {
@@ -206,22 +211,47 @@ public class StepsDetailsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (exoPlayer != null)
-            releaseExoPlayer();
+        if(Util.SDK_INT <= 23) {
+            if (exoPlayer != null) {
+                mediaposition = exoPlayer.getCurrentPosition();
+                playWhenReady=exoPlayer.getPlayWhenReady();
+                exoPlayer.setPlayWhenReady(false);
+                releaseExoPlayer();
+            }
+        }
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (exoPlayer != null)
-            releaseExoPlayer();
+        if(Util.SDK_INT >23) {
+            if (exoPlayer != null)
+                releaseExoPlayer();
+        }
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (exoPlayer != null)
-            releaseExoPlayer();
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            if(!TextUtils.isEmpty(stepsList.get(pos).getVideourl())) {
+                initializeExoPlayer();
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Util.SDK_INT <= 23 || exoPlayer == null) {
+            if(!TextUtils.isEmpty(stepsList.get(pos).getVideourl())) {
+                initializeExoPlayer();
+            }
+        }
+        exoPlayer.seekTo(mediaposition);
+        exoPlayer.setPlayWhenReady(playWhenReady);
+
     }
 
     @Override
@@ -232,6 +262,8 @@ public class StepsDetailsFragment extends Fragment {
         outState.putInt("POSITION",pos);
         outState.putString("LONG_DESC",longdes);
         outState.putString("SHORT_DESC",shortdes);
+        outState.putLong("MEDIA_POSITION", mediaposition);
+        outState.putBoolean("PLAY_WHEN_READY",playWhenReady);
     }
 
     @Override
@@ -243,6 +275,9 @@ public class StepsDetailsFragment extends Fragment {
             pos = savedInstanceState.getInt("POSITION");
             longdes = savedInstanceState.getString("LONG_DESC");
             shortdes = savedInstanceState.getString("SHORT_DESC");
+            mediaposition = savedInstanceState.getLong("MEDIA_POSITION");
+            playWhenReady=savedInstanceState.getBoolean("PLAY_WHEN_READY");
+
         }
     }
 }
