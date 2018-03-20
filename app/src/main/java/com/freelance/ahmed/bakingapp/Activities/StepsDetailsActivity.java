@@ -19,9 +19,13 @@ public class StepsDetailsActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         // Enable the Up button
         ab.setDisplayHomeAsUpEnabled(true);
-
-        StepsDetailsFragment stepsDetailsFragment = new StepsDetailsFragment();
-        FragmentManager mgr = getSupportFragmentManager();
-        mgr.beginTransaction().replace(R.id.steps_details_frame_for_fragment, stepsDetailsFragment).commit();
+        if (savedInstanceState == null) {
+            StepsDetailsFragment stepsDetailsFragment = new StepsDetailsFragment();
+            FragmentManager mgr = getSupportFragmentManager();
+            mgr.beginTransaction().replace(R.id.steps_details_frame_for_fragment, stepsDetailsFragment,"steps_tag").commit();
+        }
+        else{
+            StepsDetailsFragment stepsDetailsFragment= (StepsDetailsFragment) getSupportFragmentManager().findFragmentByTag("steps_tag");
+        }
     }
 }

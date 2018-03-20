@@ -63,7 +63,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
             holder.mRecipeImage.setImageResource(R.drawable.ic_meal);
         }
         else{
-            Picasso.get().load(recipeImage).into(holder.mRecipeImage);
+            Picasso.with(mContext).load(recipeImage).into(holder.mRecipeImage);
         }
         holder.mStepsCount.setText(stepsCountString);
         holder.setItemClickListener(new ItemClickListener() {

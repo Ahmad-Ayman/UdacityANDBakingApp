@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.freelance.ahmed.bakingapp.Activities.StepsDetailsActivity;
 import com.freelance.ahmed.bakingapp.POJO.Recipes;
 import com.freelance.ahmed.bakingapp.R;
-import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -54,7 +53,7 @@ public class StepsDetailsFragment extends Fragment {
     String videoURL = null;
     private int pos;
     String thumbURL = null;
-    long videoPosition;
+
     String longdes, shortdes;
     LinearLayout prev;
     LinearLayout nex;
@@ -69,26 +68,25 @@ public class StepsDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_steps_details, container, false);
-        return v;
-    }
-
-    @Override
-    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        videoPosition= C.TIME_UNSET;
-        if(savedInstanceState!=null){
-            videoPosition=savedInstanceState.getLong("SELECTED_POSITION",C.TIME_UNSET);
+        View view = inflater.inflate(R.layout.fragment_steps_details, container, false);
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(getContext());
+        if(savedInstanceState != null) {
+            videoURL =savedInstanceState.getString("VIDEO_URL");
+            thumbURL=savedInstanceState.getString("THUMB_URL");
+            pos=savedInstanceState.getInt("POSITION");
+            longdes=savedInstanceState.getString("LONG_DESC");
+            shortdes=savedInstanceState.getString("SHORT_DESC");
+        }else{
+            shortdes = appSharedPrefs.getString("shortDesc", "");
+            longdes = appSharedPrefs.getString("longDesc", "");
+            videoURL = appSharedPrefs.getString("vid", "");
+            thumbURL = appSharedPrefs.getString("thum", "");
+            pos = appSharedPrefs.getInt("position", -1);
         }
         final View x = view;
         Log.i("info in fragment", "Steps Details Fragment Created Successfully");
-        SharedPreferences appSharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(getContext());
-        shortdes = appSharedPrefs.getString("shortDesc", "");
-        longdes = appSharedPrefs.getString("longDesc", "");
-        videoURL = appSharedPrefs.getString("vid", "");
-        thumbURL = appSharedPrefs.getString("thum", "");
-        pos = appSharedPrefs.getInt("position", -1);
+
         Gson gson = new Gson();
         Type type = new TypeToken<List<Recipes.Steps>>() {
         }.getType();
@@ -133,7 +131,9 @@ public class StepsDetailsFragment extends Fragment {
             });
         }
 
+        return view;
     }
+
 
     private void updateUI(View v, int position) {
         SimpleExoPlayerView exoPlayerViewUI = v.findViewById(R.id.video_player);
@@ -160,7 +160,7 @@ public class StepsDetailsFragment extends Fragment {
             } else {
 
                 exoPlayerViewUI.setVisibility(View.INVISIBLE);
-                Picasso.get().load(stepsList.get(position).getThumb()).into(holderImage);
+                Picasso.with(getContext()).load(stepsList.get(position).getThumb()).into(holderImage);
                 holderImage.setVisibility(View.VISIBLE);
                 //initializeExoPlayer((stepsList.get(position).getThumb()), v);
 
@@ -206,10 +206,8 @@ public class StepsDetailsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (exoPlayer != null) {
-            videoPosition=exoPlayer.getCurrentPosition();
+        if (exoPlayer != null)
             releaseExoPlayer();
-        }
     }
 
     @Override
@@ -228,8 +226,23 @@ public class StepsDetailsFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putLong("SELECTED_POSITION",videoPosition);
         super.onSaveInstanceState(outState);
+        outState.putString("VIDEO_URL",videoURL);
+        outState.putString("THUMB_URL",thumbURL);
+        outState.putInt("POSITION",pos);
+        outState.putString("LONG_DESC",longdes);
+        outState.putString("SHORT_DESC",shortdes);
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null) {
+            videoURL = savedInstanceState.getString("VIDEO_URL");
+            thumbURL = savedInstanceState.getString("THUMB_URL");
+            pos = savedInstanceState.getInt("POSITION");
+            longdes = savedInstanceState.getString("LONG_DESC");
+            shortdes = savedInstanceState.getString("SHORT_DESC");
+        }
     }
 }

@@ -1,13 +1,16 @@
 package com.freelance.ahmed.bakingapp.Fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,6 +34,8 @@ public class IngredientsListFragment extends Fragment {
     private RecyclerView rView;
     private LinearLayoutManager lLayout;
     private IngredientsAdapter rcAdapter;
+    int lastFirstVisiblePosition;
+    private static final String BUNDLE_RECYCLER_LAYOUT = "bakingapp.recycler.layout";
 
     public IngredientsListFragment() {
         // Required empty public constructor
@@ -41,16 +46,10 @@ public class IngredientsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ingredients_list, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        View view= inflater.inflate(R.layout.fragment_ingredients_list, container, false);
         getActivity().setTitle(getResources().getString(R.string.ingred));
         rView = view.findViewById(R.id.rv_ing);
-        lLayout = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
-        rView.setLayoutManager(lLayout);
+
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this.getContext());
         Gson gson = new Gson();
@@ -58,7 +57,8 @@ public class IngredientsListFragment extends Fragment {
         }.getType();
         String response = appSharedPrefs.getString("ingred", "");
         ArrayList<Recipes.Ingredients> ingredients = gson.fromJson(response, type);
-
+        lLayout = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
+        rView.setLayoutManager(lLayout);
         if (ingredients != null && !ingredients.isEmpty()) {
             rcAdapter = new IngredientsAdapter(getContext(), ingredients);
             rView.setAdapter(rcAdapter);
@@ -70,5 +70,20 @@ public class IngredientsListFragment extends Fragment {
         } else {
             Log.e("ingr", "Ingredientsis null");
         }
+
+        return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        lastFirstVisiblePosition = ((LinearLayoutManager) rView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((LinearLayoutManager) rView.getLayoutManager()).scrollToPosition(lastFirstVisiblePosition);
+        lastFirstVisiblePosition=0;
     }
 }
